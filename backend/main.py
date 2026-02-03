@@ -285,10 +285,19 @@ def get_nodes():
             # Get node info
             node_info = node.status.node_info
             
+            # Extract node roles from labels
+            roles = []
+            if node.metadata.labels:
+                for label_key in node.metadata.labels.keys():
+                    if label_key.startswith("node-role.kubernetes.io/"):
+                        roles.append(label_key.split("/")[-1])
+            if not roles:
+                roles = ["worker"]
+            
             node_list.append({
                 "name": node.metadata.name,
                 "status": "Ready" if conditions.get("Ready") == "True" else "NotReady",
-                "roles": list(node.metadata.labels.get("node-role.kubernetes.io", {}).keys()) or ["worker"],
+                "roles": roles,
                 "version": node_info.kubelet_version,
                 "os": f"{node_info.operating_system}/{node_info.architecture}",
                 "container_runtime": node_info.container_runtime_version,
