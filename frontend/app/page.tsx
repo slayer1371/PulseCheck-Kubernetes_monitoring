@@ -143,7 +143,7 @@ export default function Dashboard() {
         {/* Nodes */}
         {nodesData && nodesData.nodes && (
           <section className="mb-8">
-            <NodeList nodes={nodesData.nodes} loading={nodesLoading} />
+            <NodeList nodes={nodesData.nodes} />
           </section>
         )}
       </main>
